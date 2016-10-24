@@ -1,0 +1,24 @@
+body {
+    font-size: 21px;
+    color: #444444
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+}
+
+.deep-link a {
+    color: #666666;
+    text-decoration: none;
+}
+
+.deep-link a:hover {
+    color: #666666;
+    text-decoration: none;
+};
+
+img {
+    width: 100%;
+    height: auto;
+}
