@@ -10,4 +10,7 @@ An in-depth project proposal can be found [here](https://jdormit.github.io/senio
 User stories are tracked on [the *Spark* Trello board](https://trello.com/b/pREfdFQ7/spark). When active development starts, sprints will be tracked there as well.
 
 ## Mockups
-Mockups of the proposed client UI can be found [here](./mockups).
+Mockups of the proposed client UI can be found [here](mockups).
+
+## Research Paper
+As a part of the project, I will write a research paper. Details can be found [here](paper).
