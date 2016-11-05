@@ -12,5 +12,8 @@ User stories are tracked on [the *Spark* Trello board](https://trello.com/b/pREf
 ## Mockups
 Mockups of the proposed client UI can be found [here](mockups).
 
+## Architecture Plan
+A rough outline of the proposed architecture for the backend and the web application can be found [here](architecture).
+
 ## Research Paper
 As a part of the project, I will write a research paper. Details can be found [here](paper).

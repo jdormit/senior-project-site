@@ -1,0 +1,42 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="pandoc">
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="https://stackedit.io/res-min/themes/base.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-74449185-3', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+</head>
+<body>
+  <div id="content">
+    <div class="container">
+      <h1 id="spark-architecture" class="deep-link"><a href="#spark-architecture"><code>Spark</code> Architecture</a></h1>
+<p>This is a brief summary of the proposed architecture for <code>Spark</code>. It&apos;s a first draft; expect many changes by the time I get to implementation.</p>
+<p>The architecture can be divided into two discrete sections. The backend is a program that runs on the host that holds the files to be edited. The backend reads from and writes to those files, and communicates over WebSockets to connected clients. The client is a separate program; it serves the web application and communicates with the backend.</p>
+<h2 id="the-backend" class="deep-link"><a href="#the-backend">The Backend</a></h2>
+<p>For the MVP, the backend will be as minimal as possible. It will be a Node.js application with two primary roles: reading and writing to the file system, and communicating with the client applications. Without getting into too much detail, the program will use the <a href="https://nodejs.org/api/fs.html"><code>fs</code> module</a> and the <a href="https://github.com/paulmillr/chokidar"><code>chokidar</code> package</a> to manipulate files. It will communicate with the clients in real-time using <a href="https://socket.io"><code>socket.io</code></a>, a JavaScript WebSocket library. I&apos;ve chosen to use WebSockets rather than HTTP for communication because WebSockets are bi-directional and real-time, eliminating the need for a polling strategy on the part of the client and hopefully giving users a more responsive experience. Although Node&apos;s event-driven, asynchronous nature will scale quite well, I will likely need to take care to ensure maximum scalability.</p>
+<p>Each client will establish a single socket connection to the backend. The processes will send events over this connection - for example, reading the contents of a directory or making changes to file. The specific events will be figured out later, but will most likely be limited to file system I/O and some metadata (particularly, metadata required to sync up changes push by multiple clients). I anticipate that handling conflicts between clients will be the trickiest part of writing the backend.</p>
+<h2 id="the-client-web-application" class="deep-link"><a href="#the-client-web-application">The Client Web Application</a></h2>
+<p>The web application will make up the bulk of the work for the MVP. It is responsible for rendering the text editor, including the directory tree, a menu, and one or more buffers with syntax highlighting. It will also need to handle all input, keyboard commands, and the like, and communicate with the backend. The client is actually made up of a few layers: a web server, a data layer, and a view layer. For the web server, I will use the <a href="https://expressjs.com"><code>Express</code></a> package to serve the application and <code>socket.io</code> to communicate with the backend.</p>
+<p>The data layer will store all the client-side data - that is, the state of the web application. I will apply the &quot;single source of truth&quot; design pattern to the data layer. In other words, all application state will live in one place, and can only be changed by making calls to that API. For a more thorough explanation, see the <a href="https://github.com/reactjs/redux"><code>Redux</code> documentation</a> (although I will not necessarily be using the <code>Redux</code> library). This approach has some advantages. It makes the application state predictable - i.e., if we know the current state, then given a series of actions we should always know what the new state will be. By keeping all state in a single place, it becomes easier to develop the rest of the application without having to worry about side effects.</p>
+<p>The view layer is responsible for rendering the data, and communicating user input to the rest of the client. I will use a component-based view library to implement the view layer - either <a href="https://reactjs.org"><code>React</code></a> or <a href="https://vuejs.org"><code>Vue</code></a>. I&apos;m currently leaning towards <code>Vue</code>, because it&apos;s apparently a little more performant, but I will continue looking into them both. Both libraries use &quot;components&quot; as their primary building blocks, which are modular, reusable HTML elements. Each component pulls whatever state it needs from the data store, and can pass data down to child components if they need to.</p>
+<p>There is a lot more planning work to do here, especially regarding input handling, but this suffices as a general plan.</p>
+<h2 id="backend-client-communication" class="deep-link"><a href="#backend-client-communication">Backend-Client Communication</a></h2>
+<p>As previously mentioned, the backend and the client will establish a WebSocket connection to allow bi-directional communication. There&apos;s a limit to how much detail I can plan for at this stage, but one thing I have thought about is how to communicate buffer changes. It&apos;s likely that sending input as it occurs, i.e. one character at a time, would be too bandwidth-intensive. Likewise, with that approach it would quite expensive to update the files on the backend. Instead, I will serialize input into commands, JavaScript objects that describe what the change was. This way, I can send input in larger chunks, decreasing bandwidith, and use smarter algorithms on the backend to save changes to disk. One strategy would be to keep a &apos;master&apos; copy of all open files in memory on the backend, and update those buffers in response to incoming serialized actions. The backend would periodically auto-save, writing the in-memory copy of the file to disk (the buffer would also be saved if a user request a manual save).</p>
+
+    </div>
+  </div>
+</body>
+</html>
