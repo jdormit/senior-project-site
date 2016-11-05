@@ -1,5 +1,5 @@
-# `Spark` Architecture
-This is a brief summary of the proposed architecture for `Spark`. It's a first draft; expect many changes by the time I get to implementation.
+# *Spark* Architecture
+This is a brief summary of the proposed architecture for *Spark*. It's a first draft; expect many changes by the time I get to implementation.
 
 The architecture can be divided into two discrete sections. The backend is a program that runs on the host that holds the files to be edited. The backend reads from and writes to those files, and communicates over WebSockets to connected clients. The client is a separate program; it serves the web application and communicates with the backend.
 

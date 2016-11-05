@@ -22,8 +22,8 @@
 <body>
   <div id="content">
     <div class="container">
-      <h1 id="spark-architecture" class="deep-link"><a href="#spark-architecture"><code>Spark</code> Architecture</a></h1>
-<p>This is a brief summary of the proposed architecture for <code>Spark</code>. It&apos;s a first draft; expect many changes by the time I get to implementation.</p>
+      <h1 id="spark-architecture" class="deep-link"><a href="#spark-architecture"><em>Spark</em> Architecture</a></h1>
+<p>This is a brief summary of the proposed architecture for <em>Spark</em>. It&apos;s a first draft; expect many changes by the time I get to implementation.</p>
 <p>The architecture can be divided into two discrete sections. The backend is a program that runs on the host that holds the files to be edited. The backend reads from and writes to those files, and communicates over WebSockets to connected clients. The client is a separate program; it serves the web application and communicates with the backend.</p>
 <h2 id="the-backend" class="deep-link"><a href="#the-backend">The Backend</a></h2>
 <p>For the MVP, the backend will be as minimal as possible. It will be a Node.js application with two primary roles: reading and writing to the file system, and communicating with the client applications. Without getting into too much detail, the program will use the <a href="https://nodejs.org/api/fs.html"><code>fs</code> module</a> and the <a href="https://github.com/paulmillr/chokidar"><code>chokidar</code> package</a> to manipulate files. It will communicate with the clients in real-time using <a href="https://socket.io"><code>socket.io</code></a>, a JavaScript WebSocket library. I&apos;ve chosen to use WebSockets rather than HTTP for communication because WebSockets are bi-directional and real-time, eliminating the need for a polling strategy on the part of the client and hopefully giving users a more responsive experience. Although Node&apos;s event-driven, asynchronous nature will scale quite well, I will likely need to take care to ensure maximum scalability.</p>
