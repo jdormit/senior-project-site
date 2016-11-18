@@ -17,3 +17,6 @@ A rough outline of the proposed architecture for the backend and the web applica
 
 ## Research Paper
 As a part of the project, I will write a research paper. Details can be found [here](paper).
+
+## Proof of Concept
+I built a proof of concept. It lives [on Github](https://github.com/jdormit/spark-proof-of-concept). It gave me [some helpful takeaways](proof-of-concept-thoughts) for the real project.

@@ -1,0 +1,39 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="pandoc">
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="https://stackedit.io/res-min/themes/base.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-74449185-3', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+</head>
+<body>
+  <div id="content">
+    <div class="container">
+      <h1 id="proof-of-concept-lessons-learned" class="deep-link"><a href="#proof-of-concept-lessons-learned">Proof of Concept: Lessons Learned</a></h1>
+<p>Some takeaways from implementing the <a href="https://github.com/jdormit/spark-proof-of-concept"><em>Spark</em> proof of concept</a>.</p>
+<h2 id="separate-the-buffer-abstraction-from-the-editor-abstraction" class="deep-link"><a href="#separate-the-buffer-abstraction-from-the-editor-abstraction">Separate the buffer abstraction from the editor abstraction</a></h2>
+<p>Buffers represent the actual text of a file. The buffer API should include functions to add or remove text at a particular point. Editors (or windows, or frames...) represent the interface onto the text. Their API includes functions to move the cursor and to capture keyboard input and commands. They call the buffer API. This separation of concerns is especially important since multiple editors can open into one buffer. Also - buffers and input are the core features of a text editor. Moving this out to an external library was a mistake that slowed down  development and limited my options (even though I am the author of the external library).</p>
+<h2 id="syncing-the-server-and-the-clients" class="deep-link"><a href="#syncing-the-server-and-the-clients">Syncing the server and the clients</a></h2>
+<p>I didn&apos;t actually run into issues in my limited testing, but I&apos;m concerned that when more clients connect or documents are more extensively edited the clients could get out of sync. To solve this, I can periodically overwrite the client buffers with the server buffer.</p>
+<h2 id="rendering-the-cursors" class="deep-link"><a href="#rendering-the-cursors">Rendering the cursors</a></h2>
+<p>This ended up working really well, but due to my limited knowledge of Vue it took a little while. Basically, since I&apos;m rendering cursors based on an object, I need to replace the whole object rather than just setting individual parts of it to ensure that Vue picks up the changes.</p>
+<h2 id="saving" class="deep-link"><a href="#saving">Saving</a></h2>
+<p>I need to make sure the preventDefault() is called at the right time to avoid the browser save window from popping up.</p>
+
+    </div>
+  </div>
+</body>
+</html>
