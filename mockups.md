@@ -1,5 +1,5 @@
 # Spark Client Mock-ups
-The following are simple mock-ups of the web client UI for [Spark](/index).
+The following are simple mock-ups of the web client UI for [Spark](./index).
 
 ## Atom Screenshot
 Spark's UI is heavily influenced by the [Atom text editor](https://atom.io). Here's a screenshot for reference:
